@@ -68,7 +68,7 @@
       "Type": "AWS::EC2::Instance"
     }
   },
-  "Description": "WordPress is web software you can use to create a beautiful website or blog.",
+  "Description": "Mappings for the instance ID based on location",
   "Mappings": {
     "AWSInstanceType2Arch" : {
       "t2.micro"    : { "Arch" : "64" },
