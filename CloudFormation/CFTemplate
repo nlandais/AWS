@@ -1,0 +1,94 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+  "Description" : "This simple template creates an AWS Linux instance and the associated security group to access it via SSH",
+
+  "Parameters": {
+    "KeyName": {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access into the server",
+      "Type" : "String",
+      "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
+    },
+    "GroupSize": {
+      "Default": "1",
+      "Description" : "The initial number of EC2 instances",
+      "Type": "Number",
+      "MinValue": "0"
+    },
+    "InstanceType": {
+      "Default": "t2.micro",
+      "Description" : "The type of EC2 instances used",
+      "Type": "String",
+      "AllowedPattern" : "[a-zA-Z0-9\\.]+"
+    },
+    "OperatorEmail": {
+      "Default": "nicolas@landais-net.us",
+      "Description": "Email address to notify if there are any operational issues",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "EC2SecurityGroup": {
+      "Properties": {
+        "SecurityGroupIngress": [
+          {
+            "FromPort": "22",
+            "CidrIp": "24.246.174.31/32",
+            "ToPort": "22",
+            "IpProtocol": "tcp"
+          }
+        ],
+        "GroupDescription": "SSH access"
+      },
+      "Type": "AWS::EC2::SecurityGroup"
+    },
+    "EC2Instance": {
+      "Properties": {
+        "ImageId": {
+            "Fn::FindInMap": [
+              "AWSRegionArch2AMI",
+              {
+                "Ref": "AWS::Region"
+              },
+          {
+            "Fn::FindInMap": [
+              "AWSInstanceType2Arch",
+              {
+                "Ref": "InstanceType"
+              },
+              "Arch"
+            ]
+          }
+        ]
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        }
+      },
+      "Type": "AWS::EC2::Instance"
+    }
+  },
+  "Description": "WordPress is web software you can use to create a beautiful website or blog.",
+  "Mappings": {
+    "AWSInstanceType2Arch" : {
+      "t2.micro"    : { "Arch" : "64" },
+      "m1.small"    : { "Arch" : "32" },
+      "m1.large"    : { "Arch" : "64" },
+      "m1.xlarge"   : { "Arch" : "64" },
+      "m2.xlarge"   : { "Arch" : "64" },
+      "m2.2xlarge"  : { "Arch" : "64" },
+      "m2.4xlarge"  : { "Arch" : "64" },
+      "c1.medium"   : { "Arch" : "32" },
+      "c1.xlarge"   : { "Arch" : "64" },
+      "cc1.4xlarge" : { "Arch" : "64" }
+    },
+    "AWSRegionArch2AMI" : {
+      "us-east-1" : { "64" : "ami-0e6d2e8684d4ccb3e" },
+      "us-west-1" : { "64" : "ami-01eb1709d6ad69035" }
+    },
+    "AWSRegionCapabilities" : {
+      "us-east-1" :      { "RDSMultiAZ" : "true" },
+      "us-west-1" :      { "RDSMultiAZ" : "true" }
+    }
+  }
+}
