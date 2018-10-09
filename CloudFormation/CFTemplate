@@ -63,7 +63,10 @@
         },
         "KeyName": {
           "Ref": "KeyName"
-        }
+        },
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
       },
       "Type": "AWS::EC2::Instance"
     }
