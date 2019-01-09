@@ -80,21 +80,21 @@ resource "aws_security_group" "openvpn" {
     protocol  = "tcp"
     from_port = 22
     to_port   = 22
-    cidr_blocks = ["${var.my_ip}"]
+    cidr_blocks = ["${var.myip}/32"]
   }
 
   ingress {
     protocol  = "tcp"
     from_port = 943
     to_port   = 943
-    cidr_blocks = ["${var.my_ip}"]
+    cidr_blocks = ["${var.myip}/32"]
   }
 
   ingress {
     protocol  = "tcp"
     from_port = 1194
     to_port   = 1194
-    cidr_blocks = ["${var.my_ip}"]
+    cidr_blocks = ["${var.myip}/32"]
   }
 
   # outbound internet access
