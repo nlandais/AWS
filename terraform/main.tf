@@ -27,6 +27,29 @@ data "aws_subnet" "public" {
   }
 }
 
+data "aws_eip" "nat_gw_ip" {
+  filter {
+    name   = "tag:Name"
+    values = ["gw_ip"]
+  }
+}
+
+data "aws_eip" "openvpn_ip" {
+  filter {
+    name   = "tag:Name"
+    values = ["openvpn_ip"]
+  }
+}
+
+
+resource "aws_nat_gateway" "nat_gw" {
+  allocation_id = "${data.aws_eip.nat_gw_ip.id}"
+  subnet_id = "${data.aws_subnet.public.id}"
+  tags {
+    Name = "gw"
+  }
+}
+
 resource "aws_default_security_group" "default" {
   vpc_id = "${data.aws_vpc.default.id}"
 
